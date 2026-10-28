@@ -1004,6 +1004,40 @@ html,body{margin:0; padding:0;}
   @media (prefers-reduced-motion:reduce){
     .al-brand,.al-pill,.auth-hero,.al-feat li,.al-foot,.al-brand .mk::before,.al-pill i,.auth-card .btn-primary::after,.auth-code,.auth-wrap{animation:none !important;} #authRoot{transition:none;}
   }
+
+  /* ---------- Edit lock: view first, press "Edit" to change ---------- */
+  table.data tbody tr{cursor:pointer;}
+  table.data td.actions,table.data thead th:last-child{position:sticky; right:0; z-index:2; text-align:center;}
+  table.data td.actions{background:linear-gradient(90deg,rgba(11,17,38,0),#0B1126 14px);}
+  table.data thead th:last-child{background:#0A1733; width:46px;}
+  table.data tbody tr:hover td.actions{background:linear-gradient(90deg,rgba(14,24,50,0),#0F1A38 14px);}
+  .lock-hint{font-size:12px; color:var(--text-muted); margin:0 0 8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .lock-hint b{color:var(--gold,#FFC85C); font-weight:600;}
+  .view-btn{font-size:14px;}
+  .modal.cols2{max-width:780px;}
+  .modal.cols2 .modal-body{display:grid; grid-template-columns:1fr 1fr; gap:13px 16px;}
+  .modal-body .field.span2{grid-column:1/-1;}
+  @media (max-width:640px){ .modal.cols2 .modal-body{grid-template-columns:1fr;} }
+  .modal.noanim{animation:none;}
+  .modal.editing{border-color:rgba(255,200,92,.6); box-shadow:0 20px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,200,92,.35), 0 0 36px rgba(255,200,92,.10);}
+  .modal-head h3{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .mode-pill{font-size:11px; padding:2px 9px; border-radius:20px; border:1px solid; font-family:inherit; letter-spacing:.02em; font-weight:600;}
+  .mode-pill.view{color:var(--teal); border-color:rgba(41,241,255,.4); background:rgba(41,241,255,.08);}
+  .mode-pill.edit{color:#FFC85C; border-color:rgba(255,200,92,.55); background:rgba(255,200,92,.1);}
+  .ro-val{padding:8px 10px; border-radius:7px; border:1px dashed rgba(41,241,255,.16); background:rgba(5,8,16,.35); min-height:35px; white-space:pre-wrap; word-break:break-word; font-size:13.5px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+  .ro-val .ro-empty{color:var(--text-faint);}
+  .modal-meta{font-size:11px; color:var(--text-faint); padding:8px 20px 12px;}
+  .modal.cols2 .modal-body{max-height:74vh;}
+  .audit-item.locked .audit-grid input,.audit-item.locked .audit-grid select{opacity:.88; border-style:dashed; cursor:default;}
+  .audit-item.editing{border-color:rgba(255,200,92,.55);}
+  .audit-item .aud-btns{display:inline-flex; gap:6px;}
+  .policy-card .pc-head{display:flex; gap:12px; justify-content:space-between; align-items:flex-start; flex-wrap:wrap;}
+  .policy-card .pc-tools{display:inline-flex; gap:6px; flex-wrap:wrap;}
+  .policy-card .pc-mod{font-size:11.5px; color:#FFC85C; background:rgba(255,200,92,.08); border:1px solid rgba(255,200,92,.3); border-radius:8px; padding:6px 10px; margin:8px 0 10px;}
+  .policy-card .pc-help{font-size:11.5px; color:var(--text-muted); margin:8px 0 6px;}
+  .policy-card .pc-edit{width:100%; min-height:240px; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,200,92,.5); background:rgba(5,8,16,.6); color:var(--text); line-height:1.6; resize:vertical;}
+  .ss-spec.locked input:disabled,.ss-spec.locked select:disabled{opacity:.9; cursor:default; border-style:dashed;}
+  .ss-lock{margin:6px 0 10px;}
 </style>
 </head>
 <body>
@@ -2283,6 +2317,36 @@ I18N_DICT["ຄຳແນະນຳ: ກະລຸນາບັນທຶກຂໍ້�
 I18N_DICT["ຂໍ້ມູນຫົວເອກະສານອ້າງອີງຈາກໄຟລ໌ KGS-IT-REG-003-HQ (Vientiane Asset Register) ທີ່ອັບໂຫຼດ (ຜູ້ໃຊ້ຢືນຢັນວ່າເປັນໄຟລ໌ເຮັດວຽກຈິງ ແລະ ຜ່ານການອະນຸມັດ ISO ແລ້ວ — ແອບບໍ່ໄດ້ກວດຫຼັກຖານການອະນຸມັດ)."] = "Header data is taken from the uploaded KGS-IT-REG-003-HQ (Vientiane Asset Register) file (the user confirms it is the real working file and already ISO-approved — the app has not verified approval evidence).";
 I18N_DICT["ຍ້າຍ ID ເກົ່າ → ID ໃໝ່"] = "Moved old IDs → new IDs";
 I18N_DICT["ໝາຍເຫດ / ຕ້ອງກວດ"] = "Notes / to verify";
+
+(function(){
+  var D = {
+    "ປ້ອງກັນການແກ້ໄຂໂດຍບໍ່ຕັ້ງໃຈ: ກົດ":"Protection against accidental edits: press",
+    "ທີ່ລາຍການນັ້ນກ່ອນ ຈຶ່ງຈະປ່ຽນຜົນກວດໄດ້":"on that item first, then you can change the result",
+    "ທີ່ກ່ອງນັ້ນກ່ອນ ຈຶ່ງຈະປ່ຽນເນື້ອຫາໄດ້":"on that section first, then you can change its text",
+    "ເບິ່ງ / ແກ້ໄຂ":"View / Edit", "ລາຍລະອຽດ":"Details", "ອ່ານຢ່າງດຽວ":"Read-only", "ກຳລັງແກ້ໄຂ":"Editing", "ໃໝ່":"New",
+    "ແກ້ໄຂ":"Edit", "ປິດ":"Close", "ແກ້ໄຂຄັ້ງຫຼ້າສຸດ":"Last edited", "ສ້າງເມື່ອ":"Created",
+    "ສະແດງ":"Show", "ເຊື່ອງ":"Hide",
+    "ມີການປ່ຽນແປງທີ່ຍັງບໍ່ໄດ້ບັນທຶກ — ຖິ້ມການປ່ຽນແປງບໍ?":"There are unsaved changes. Discard them?",
+    "ປ້ອງກັນການແກ້ໄຂໂດຍບໍ່ຕັ້ງໃຈ: ກົດແຖວເພື່ອເບິ່ງ ແລ້ວກົດ":"Protection against accidental edits: click a row to view it, then press",
+    "ຈຶ່ງຈະແກ້ໄຂ ຫຼື ລຶບໄດ້":"to edit or delete",
+    "ຕາຕະລາງນີ້ມີ":"This table has", "ຄໍລຳ — ກົດແຖວ ຫຼື 👁 ເພື່ອເບິ່ງທຸກຊ່ອງ; ຈະແກ້ໄຂໄດ້ຕໍ່ເມື່ອກົດ ✎ ແກ້ໄຂ ໃນໜ້າລາຍລະອຽດ.":"columns. Click a row or 👁 to see every field; you can only change data after pressing ✎ Edit in the detail view.",
+    "ລຶບ:":"Delete:",
+    "ກຳລັງແກ້ໄຂ — ກົດ \"ບັນທຶກ\" ເມື່ອແລ້ວ ຫຼື \"ຍົກເລີກ\" ເພື່ອຖິ້ມການປ່ຽນແປງ":"Editing. Press Save when done, or Cancel to discard changes",
+    "ຍັງບໍ່ມີຂໍ້ມູນ":"No data yet",
+    "ຍັງບໍ່ໄດ້ບັນທຶກ":"Not recorded yet",
+    "ຄຳແນະນຳ: ກົດ ✎ ແກ້ໄຂ ເພື່ອປ່ຽນຜົນກວດ":"Press ✎ Edit to change a result",
+    "✎ ແກ້ໄຂ":"✎ Edit", "✓ ແກ້ໄຂແລ້ວ (ລ໋ອກ)":"✓ Done (lock)",
+    "🔒 ອ່ານຢ່າງດຽວ — ກົດ \"✎ ແກ້ໄຂ\" ຈຶ່ງຈະປ່ຽນສະເປັກ / ສຳເນົາ / ລຶບໄດ້":"🔒 Read-only. Press \"✎ Edit\" to change specs, duplicate or delete",
+    "✎ ກຳລັງແກ້ໄຂ — ການປ່ຽນຖືກບັນທຶກອັດຕະໂນມັດ; ກົດ \"ແກ້ໄຂແລ້ວ\" ເພື່ອລ໋ອກຄືນ":"✎ Editing. Changes save automatically; press \"Done\" to lock again",
+    "ແຕ່ລະແຖວ = 1 ຂໍ້; ແຖວທີ່ຂຶ້ນຕົ້ນດ້ວຍ ## = ຫົວຂໍ້ຍ່ອຍ":"One line = one item; a line starting with ## = a sub-heading",
+    "ແກ້ໄຂໃນແອັບເມື່ອ":"Edited in the app on",
+    "ບໍ່ແມ່ນສະບັບອະນຸມັດຢ່າງເປັນທາງການ; ກວດທຽບກັບ KGS-IT-MAN-01 ກ່ອນນຳໃຊ້":"not the officially approved version; check against KGS-IT-MAN-01 before use",
+    "↺ ຄືນຄ່າເດີມ":"↺ Restore original", "ຄືນຄ່າເດີມຂອງເນື້ອຫານີ້ບໍ?":"Restore the original text of this section?",
+    "ເນື້ອຫາວ່າງ — ບໍ່ສາມາດບັນທຶກໄດ້":"Content is empty and cannot be saved",
+    "ບັນທຶກແລ້ວ":"Saved", "ກັບຄືນຄ່າເດີມແລ້ວ":"Restored to original"
+  };
+  Object.keys(D).forEach(function(k){ if(!I18N_DICT[k]) I18N_DICT[k] = D[k]; });
+})();
 var I18N_KEYS_SORTED = Object.keys(I18N_DICT).sort(function(a,b){ return b.length-a.length; });
 var I18N_ATTRS = ['placeholder','title','aria-label'];
 var I18N_LAO_RE = /[຀-໿]/;
@@ -2717,6 +2781,7 @@ function renderModule(key){
     '</div>'+
     (state.dbReady? '' : dbBannerHtml())+
     docBarHtml(cfg)+(cfg.chips? '<div class="chip-row" id="chipRow"></div>' : '')+
+    '<div class="lock-hint">🔒 <span>ປ້ອງກັນການແກ້ໄຂໂດຍບໍ່ຕັ້ງໃຈ: ກົດແຖວເພື່ອເບິ່ງ ແລ້ວກົດ</span> <b>✎ ແກ້ໄຂ</b> <span>ຈຶ່ງຈະແກ້ໄຂ ຫຼື ລຶບໄດ້</span></div>'+
     '<div class="table-wrap"><div class="table-scroll" id="tableHolder"><div class="loading-row">ກຳລັງໂຫຼດ…</div></div></div>';
 
   $('#addBtn').addEventListener('click', function(){ openRecordModal(key, null, key==='assets' ? {assetId:nextAssetId()} : null); });
@@ -2846,18 +2911,21 @@ function renderTable(key, filterText){
     }).join('');
     return '<tr data-id="'+esc(r.id)+'">'+tds+
       '<td class="actions"><span class="row-actions">'+
-        '<button class="icon-btn edit-btn" title="ແກ້ໄຂ" data-id="'+esc(r.id)+'">✎</button>'+
-        '<button class="icon-btn del-btn" title="ລຶບ" data-id="'+esc(r.id)+'">🗑</button>'+
+        '<button class="icon-btn view-btn" title="ເບິ່ງ / ແກ້ໄຂ" aria-label="ເບິ່ງ / ແກ້ໄຂ" data-id="'+esc(r.id)+'">👁</button>'+
       '</span></td></tr>';
   }).join('')+'</tbody>';
 
   holder.innerHTML = '<table class="data'+(cols.length>8?' compact':'')+'">'+thead+tbody+'</table>'+
-    (cols.length>8? '<div class="wide-hint">ຕາຕະລາງນີ້ມີ '+(cols.length-1)+' ຄໍລຳ — ຖ້າເບິ່ງບໍ່ຄົບ ໃຫ້ເລື່ອນຊ້າຍ-ຂວາ ຫຼື ກົດ ✎ ເພື່ອເບິ່ງທຸກຊ່ອງຂອງແຖວນັ້ນ.</div>' : '');
-  holder.querySelectorAll('.edit-btn').forEach(function(b){
-    b.addEventListener('click', function(){ openRecordModal(key, this.getAttribute('data-id')); });
+    (cols.length>8? '<div class="wide-hint">ຕາຕະລາງນີ້ມີ '+(cols.length-1)+' ຄໍລຳ — ກົດແຖວ ຫຼື 👁 ເພື່ອເບິ່ງທຸກຊ່ອງ; ຈະແກ້ໄຂໄດ້ຕໍ່ເມື່ອກົດ ✎ ແກ້ໄຂ ໃນໜ້າລາຍລະອຽດ.</div>' : '');
+  holder.querySelectorAll('.view-btn').forEach(function(b){
+    b.addEventListener('click', function(e){ e.stopPropagation(); openRecordModal(key, this.getAttribute('data-id')); });
   });
-  holder.querySelectorAll('.del-btn').forEach(function(b){
-    b.addEventListener('click', function(){ confirmDelete(key, this.getAttribute('data-id')); });
+  holder.querySelectorAll('tbody tr').forEach(function(tr){
+    tr.addEventListener('click', function(e){
+      if(e.target.closest && e.target.closest('button,a,input,select,textarea')) return;
+      try{ if(window.getSelection && String(window.getSelection()).length>0) return; }catch(x){}
+      openRecordModal(key, tr.getAttribute('data-id'));
+    });
   });
 }
 
@@ -3234,71 +3302,124 @@ function exportAllExcelTemplate(){
 }
 
 /* ---------- Record modal ---------- */
-function openRecordModal(key, id, prefill){
+function fmtFull(iso){
+  var d = new Date(iso); if(isNaN(d.getTime())) return '';
+  function p(n){ return n<10 ? '0'+n : ''+n; }
+  return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()+' '+p(d.getHours())+':'+p(d.getMinutes());
+}
+function roFieldHtml(f, rec){
+  var v = rec[f.key], txt;
+  if(v===undefined || v===null || v==='') txt = '<span class="ro-empty">—</span>';
+  else if(f.type==='date') txt = esc(fmtDate(v));
+  else if(f.badge) txt = badgeHtml(v);
+  else if(f.secret) txt = '<span class="mono ro-secret" data-full="'+esc(v)+'" data-shown="0">'+esc(maskSecret(v))+'</span><button type="button" class="btn btn-sm ro-reveal">👁 ສະແດງ</button>';
+  else txt = esc(v);
+  return '<div class="field'+(f.type==='textarea'?' span2':'')+'"><label>'+esc(f.label)+'</label><div class="ro-val">'+txt+'</div></div>';
+}
+function editFieldHtml(f, rec){
+  var val = rec[f.key]!==undefined ? rec[f.key] : '';
+  var reqAttr = f.required ? ' required' : '';
+  var reqStar = f.required ? ' <span class="req">*</span>' : '';
+  var inputHtml = '';
+  if(f.type==='select'){
+    var opts = f.options.slice();
+    if(val!=='' && opts.indexOf(String(val))<0) opts.push(String(val)); /* keep legacy / imported values editable */
+    inputHtml = '<select id="f_'+f.key+'"'+reqAttr+'><option value="">—</option>'+
+      opts.map(function(o){ return '<option value="'+esc(o)+'"'+(String(val)===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+
+      '</select>';
+  } else if(f.type==='textarea'){
+    inputHtml = '<textarea id="f_'+f.key+'"'+reqAttr+'>'+esc(val)+'</textarea>';
+  } else {
+    var sugg = f.suggest || null, dlHtml = '';
+    if(f.suggestAssets && state.db){
+      sugg = (state.db.getAll('assets')||[]).filter(function(a){ return a.assetId; }).map(function(a){ return [a.assetId, a.description||'']; });
+    }
+    if(sugg && sugg.length){
+      dlHtml = '<datalist id="dl_'+f.key+'">'+sugg.map(function(o){
+        return Array.isArray(o) ? '<option value="'+esc(o[0])+'" label="'+esc(o[1])+'"></option>' : '<option value="'+esc(o)+'"></option>';
+      }).join('')+'</datalist>';
+    }
+    inputHtml = '<input type="'+(f.type==='date'?'date':(f.type==='number'?'number':'text'))+'" id="f_'+f.key+'" value="'+esc(val)+'"'+reqAttr+(dlHtml?' list="dl_'+f.key+'"':'')+'>'+dlHtml;
+  }
+  return '<div class="field'+(f.type==='textarea'?' span2':'')+'"><label>'+esc(f.label)+reqStar+'</label>'+inputHtml+'</div>';
+}
+var recEscBound = false;
+function openRecordModal(key, id, prefill, startEdit){
   var cfg = MODULES[key];
   var rec = id ? (state.cache[key]||[]).find(function(r){ return r.id===id; }) : (prefill || {});
   rec = rec || {};
+  var editing = !id || !!startEdit, dirty = false, animate = true;
   var root = $('#modalRoot');
-  var fieldsHtml = cfg.fields.map(function(f){
-    var val = rec[f.key]!==undefined? rec[f.key] : '';
-    var reqAttr = f.required? ' required' : '';
-    var reqStar = f.required? ' <span class="req">*</span>' : '';
-    var inputHtml = '';
-    if(f.type==='select'){
-      var opts = f.options.slice();
-      if(val!=='' && opts.indexOf(String(val))<0) opts.push(String(val)); /* keep legacy / imported values editable */
-      inputHtml = '<select id="f_'+f.key+'"'+reqAttr+'><option value="">—</option>'+
-        opts.map(function(o){ return '<option value="'+esc(o)+'"'+(String(val)===o?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+
-        '</select>';
-    } else if(f.type==='textarea'){
-      inputHtml = '<textarea id="f_'+f.key+'"'+reqAttr+'>'+esc(val)+'</textarea>';
-    } else {
-      var sugg = f.suggest || null, dlHtml = '';
-      if(f.suggestAssets && state.db){
-        sugg = (state.db.getAll('assets')||[]).filter(function(a){ return a.assetId; }).map(function(a){ return [a.assetId, a.description||'']; });
-      }
-      if(sugg && sugg.length){
-        dlHtml = '<datalist id="dl_'+f.key+'">'+sugg.map(function(o){
-          return Array.isArray(o) ? '<option value="'+esc(o[0])+'" label="'+esc(o[1])+'"></option>' : '<option value="'+esc(o)+'"></option>';
-        }).join('')+'</datalist>';
-      }
-      inputHtml = '<input type="'+(f.type==='date'?'date':(f.type==='number'?'number':'text'))+'" id="f_'+f.key+'" value="'+esc(val)+'"'+reqAttr+(dlHtml?' list="dl_'+f.key+'"':'')+'>'+dlHtml;
-    }
-    return '<div class="field"><label>'+esc(f.label)+reqStar+'</label>'+inputHtml+'</div>';
-  }).join('');
-
-  root.innerHTML =
-    '<div class="modal-scrim" id="scrimModal"><div class="modal">'+
-      '<div class="modal-head"><h3>'+(id? 'ແກ້ໄຂລາຍການ':'ເພີ່ມລາຍການໃໝ່')+' — '+esc(cfg.title)+'</h3>'+
-      '<button class="icon-btn" id="closeModal">✕</button></div>'+
-      '<div class="modal-body" id="formFields">'+fieldsHtml+'</div>'+
-      '<div class="modal-foot">'+
-        (id? '<button class="btn btn-danger" id="deleteFromModal" style="margin-right:auto;">ລຶບລາຍການ</button>' : '')+
-        '<button class="btn" id="cancelBtn">ຍົກເລີກ</button>'+
-        '<button class="btn btn-primary" id="saveBtn">ບັນທຶກ</button>'+
-      '</div>'+
-    '</div></div>';
-  try{ Sound.open(); }catch(e){}
-
   function close(){ try{ Sound.close(); }catch(e){} root.innerHTML=''; }
-  $('#closeModal').addEventListener('click', close);
-  $('#cancelBtn').addEventListener('click', close);
-  $('#scrimModal').addEventListener('click', function(e){ if(e.target.id==='scrimModal') close(); });
-  if(id){
-    $('#deleteFromModal').addEventListener('click', function(){ close(); confirmDelete(key, id); });
-  }
-  $('#saveBtn').addEventListener('click', function(){
-    var data = {};
-    var missing = false;
-    cfg.fields.forEach(function(f){
-      var node = $('#f_'+f.key);
-      var v = node.value;
-      if(f.required && !v){ missing = true; node.style.borderColor='var(--danger)'; }
-      data[f.key] = f.type==='number' ? (v===''? '' : Number(v)) : v;
+  if(!recEscBound){
+    recEscBound = true;
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape' && document.querySelector('#modalRoot .modal.view')){ try{ Sound.close(); }catch(x){} $('#modalRoot').innerHTML=''; }
     });
-    if(missing){ toast('ກະລຸນາຕື່ມຂໍ້ມູນທີ່ຈຳເປັນ (*)', true); return; }
-    saveRecord(key, id, data, close);
-  });
+  }
+  function discardOk(){ return !dirty || window.confirm('ມີການປ່ຽນແປງທີ່ຍັງບໍ່ໄດ້ບັນທຶກ — ຖິ້ມການປ່ຽນແປງບໍ?'); }
+  function draw(){
+    var fieldsHtml = editing ? cfg.fields.map(function(f){ return editFieldHtml(f, rec); }).join('')
+                             : cfg.fields.map(function(f){ return roFieldHtml(f, rec); }).join('');
+    if(!editing && cfg.derivedStatus){
+      var ds = cfg.derivedStatus(rec);
+      fieldsHtml += '<div class="field"><label>'+esc(cfg.derivedLabel||'ສະຖານະ')+'</label><div class="ro-val">'+(ds ? '<span class="badge '+ds.cls+'">'+esc(ds.label)+'</span>' : '<span class="ro-empty">—</span>')+'</div></div>';
+    }
+    var title = !id ? 'ເພີ່ມລາຍການໃໝ່' : (editing ? 'ແກ້ໄຂລາຍການ' : 'ລາຍລະອຽດ');
+    var pill = editing ? '<span class="mode-pill edit">'+(id ? '✎ ກຳລັງແກ້ໄຂ' : '＋ ໃໝ່')+'</span>' : '<span class="mode-pill view">🔒 ອ່ານຢ່າງດຽວ</span>';
+    var stamp = rec._updatedAt ? ('ແກ້ໄຂຄັ້ງຫຼ້າສຸດ: '+fmtFull(rec._updatedAt)) : (rec._createdAt ? ('ສ້າງເມື່ອ: '+fmtFull(rec._createdAt)) : '');
+    var foot = editing
+      ? ((id ? '<button class="btn btn-danger" id="deleteFromModal" style="margin-right:auto;">ລຶບລາຍການ</button>' : '')+
+         '<button class="btn" id="cancelBtn">ຍົກເລີກ</button><button class="btn btn-primary" id="saveBtn">ບັນທຶກ</button>')
+      : '<button class="btn" id="cancelBtn">ປິດ</button><button class="btn btn-primary" id="editBtn">✎ ແກ້ໄຂ</button>';
+    root.innerHTML =
+      '<div class="modal-scrim" id="scrimModal"><div class="modal '+(editing?'editing':'view')+(cfg.fields.length>6?' cols2':'')+(animate?'':' noanim')+'">'+
+        '<div class="modal-head"><h3>'+esc(title)+' — '+esc(cfg.title)+' '+pill+'</h3><button class="icon-btn" id="closeModal" aria-label="ປິດ">✕</button></div>'+
+        '<div class="modal-body" id="formFields">'+fieldsHtml+'</div>'+
+        (!editing && stamp ? '<div class="modal-meta">'+esc(stamp)+'</div>' : '')+
+        '<div class="modal-foot">'+foot+'</div>'+
+      '</div></div>';
+    animate = false;
+    $('#closeModal').addEventListener('click', function(){ if(editing && !discardOk()) return; close(); });
+    $('#cancelBtn').addEventListener('click', function(){
+      if(editing && id){ if(!discardOk()) return; editing = false; dirty = false; draw(); }
+      else { if(editing && !discardOk()) return; close(); }
+    });
+    /* clicking the dark background only closes the read-only view — never an open edit form */
+    $('#scrimModal').addEventListener('click', function(e){ if(e.target.id==='scrimModal' && !editing) close(); });
+    if(!editing){
+      $('#editBtn').addEventListener('click', function(){
+        editing = true; draw();
+        var first = root.querySelector('#formFields input, #formFields select, #formFields textarea'); if(first) first.focus();
+      });
+      root.querySelectorAll('.ro-reveal').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          var sp = btn.parentNode.querySelector('.ro-secret'), shown = sp.getAttribute('data-shown')==='1';
+          sp.textContent = shown ? maskSecret(sp.getAttribute('data-full')) : sp.getAttribute('data-full');
+          sp.setAttribute('data-shown', shown ? '0' : '1'); btn.textContent = shown ? '👁 ສະແດງ' : '🙈 ເຊື່ອງ';
+        });
+      });
+      return;
+    }
+    var ff = $('#formFields');
+    ff.addEventListener('input', function(){ dirty = true; });
+    ff.addEventListener('change', function(){ dirty = true; });
+    if(id){ $('#deleteFromModal').addEventListener('click', function(){ close(); confirmDelete(key, id); }); }
+    $('#saveBtn').addEventListener('click', function(){
+      var data = {};
+      var missing = false;
+      cfg.fields.forEach(function(f){
+        var node = $('#f_'+f.key);
+        var v = node.value;
+        if(f.required && !v){ missing = true; node.style.borderColor='var(--danger)'; }
+        data[f.key] = f.type==='number' ? (v===''? '' : Number(v)) : v;
+      });
+      if(missing){ toast('ກະລຸນາຕື່ມຂໍ້ມູນທີ່ຈຳເປັນ (*)', true); return; }
+      saveRecord(key, id, data, close);
+    });
+  }
+  try{ Sound.open(); }catch(e){}
+  draw();
 }
 
 function saveRecord(key, id, data, done){
@@ -3319,10 +3440,12 @@ function saveRecord(key, id, data, done){
 
 function confirmDelete(key, id){
   var root = $('#modalRoot');
+  var cfg0 = MODULES[key], rec0 = (state.cache[key]||[]).find(function(r){ return r.id===id; }) || {};
+  var label0 = cfg0 && cfg0.fields && cfg0.fields[0] ? String(rec0[cfg0.fields[0].key]||'') : '';
   root.innerHTML =
     '<div class="modal-scrim confirm-modal" id="scrimConfirm"><div class="modal">'+
       '<div class="modal-head"><h3>ລຶບລາຍການ?</h3><button class="icon-btn" id="cClose">✕</button></div>'+
-      '<div class="modal-body">ການລຶບນີ້ບໍ່ສາມາດກູ້ຄືນໄດ້. ທ່ານແນ່ໃຈບໍ່ວ່າຈະລຶບລາຍການນີ້?</div>'+
+      '<div class="modal-body">'+(label0 ? '<div><b style="color:#FFC85C">ລຶບ: '+esc(label0)+'</b></div>' : '')+'<div>ການລຶບນີ້ບໍ່ສາມາດກູ້ຄືນໄດ້. ທ່ານແນ່ໃຈບໍ່ວ່າຈະລຶບລາຍການນີ້?</div></div>'+
       '<div class="modal-foot"><button class="btn" id="cCancel">ຍົກເລີກ</button><button class="btn btn-primary" style="background:var(--danger);border-color:var(--danger);" id="cOk">ລຶບ</button></div>'+
     '</div></div>';
   try{ Sound.open(); }catch(e){}
@@ -3349,6 +3472,7 @@ function renderAudit(){
     '<div class="head-actions"><button class="btn" id="auditExportBtn">⬇ Export CSV</button></div>'+
     '</div>'+
     (state.dbReady? '' : dbBannerHtml())+
+    '<div class="lock-hint">🔒 <span>ປ້ອງກັນການແກ້ໄຂໂດຍບໍ່ຕັ້ງໃຈ: ກົດ</span> <b>✎ ແກ້ໄຂ</b> <span>ທີ່ລາຍການນັ້ນກ່ອນ ຈຶ່ງຈະປ່ຽນຜົນກວດໄດ້</span></div>'+
     '<div id="auditList"></div>';
 
   $('#auditExportBtn').addEventListener('click', function(){
@@ -3374,22 +3498,40 @@ function renderAudit(){
   });
 }
 function auditItemHtml(i, label){
-  return '<div class="audit-item" data-idx="'+i+'">'+
+  return '<div class="audit-item locked" data-idx="'+i+'" id="aud_item_'+i+'">'+
     '<div class="row1"><span class="idx">'+(i+1)+'</span><span class="txt">'+esc(label)+'</span></div>'+
     '<div class="audit-grid">'+
-      '<select id="aud_result_'+i+'"><option value="">— ຜົນ —</option><option>ຜ່ານ (Pass)</option><option>ບໍ່ຜ່ານ (Fail)</option><option>N/A</option></select>'+
-      '<input type="text" id="aud_evidence_'+i+'" placeholder="ຫຼັກຖານອ້າງອີງ">'+
-      '<input type="text" id="aud_checker_'+i+'" placeholder="ຜູ້ກວດ">'+
-      '<button class="btn btn-primary btn-sm" id="aud_save_'+i+'">ບັນທຶກ</button>'+
+      '<select id="aud_result_'+i+'" disabled><option value="">— ຜົນ —</option><option>ຜ່ານ (Pass)</option><option>ບໍ່ຜ່ານ (Fail)</option><option>N/A</option></select>'+
+      '<input type="text" id="aud_evidence_'+i+'" placeholder="ຫຼັກຖານອ້າງອີງ" disabled>'+
+      '<input type="text" id="aud_checker_'+i+'" placeholder="ຜູ້ກວດ" disabled>'+
+      '<span class="aud-btns"><button class="btn btn-sm" id="aud_edit_'+i+'">✎ ແກ້ໄຂ</button>'+
+        '<button class="btn btn-primary btn-sm" id="aud_save_'+i+'" style="display:none">ບັນທຶກ</button>'+
+        '<button class="btn btn-sm" id="aud_cancel_'+i+'" style="display:none">ຍົກເລີກ</button></span>'+
     '</div></div>';
 }
+function auditSetEdit(i, on){
+  var item = $('#aud_item_'+i); if(!item) return;
+  item.classList.toggle('locked', !on); item.classList.toggle('editing', !!on); item.__editing = !!on;
+  ['aud_result_','aud_evidence_','aud_checker_'].forEach(function(p){ var n = $('#'+p+i); if(n) n.disabled = !on; });
+  $('#aud_edit_'+i).style.display = on ? 'none' : '';
+  $('#aud_save_'+i).style.display = on ? '' : 'none';
+  $('#aud_cancel_'+i).style.display = on ? '' : 'none';
+}
+function auditFill(i, d){
+  d = d || {};
+  $('#aud_result_'+i).value = d.result || '';
+  $('#aud_evidence_'+i).value = d.evidence || '';
+  $('#aud_checker_'+i).value = d.checkedBy || '';
+}
 function updateAuditRow(i, data){
-  var r = $('#aud_result_'+i); if(r && data.result) r.value = data.result;
-  var e = $('#aud_evidence_'+i); if(e && data.evidence!==undefined) e.value = data.evidence;
-  var ch = $('#aud_checker_'+i); if(ch && data.checkedBy!==undefined) ch.value = data.checkedBy;
+  var item = $('#aud_item_'+i); if(!item) return;
+  item.__saved = {result:data.result||'', evidence:data.evidence||'', checkedBy:data.checkedBy||''};
+  if(!item.__editing) auditFill(i, item.__saved);   /* never overwrite what the user is typing */
   var btn = $('#aud_save_'+i);
   if(btn && !btn.__wired){
     btn.__wired = true;
+    $('#aud_edit_'+i).addEventListener('click', function(){ auditSetEdit(i, true); var r = $('#aud_result_'+i); if(r) r.focus(); });
+    $('#aud_cancel_'+i).addEventListener('click', function(){ auditFill(i, item.__saved); auditSetEdit(i, false); });
     btn.addEventListener('click', function(){
       var docId = 'item'+(i+1);
       var payload = {
@@ -3399,8 +3541,9 @@ function updateAuditRow(i, data){
         checkedBy:$('#aud_checker_'+i).value,
         updatedAt:new Date().toISOString()
       };
+      if(!state.db){ toast('ບັນທຶກບໍ່ສຳເລັດ', true); return; }
       state.db.doc('auditChecklist/'+docId).set(payload)
-        .then(function(){ toast('ບັນທຶກລາຍການ '+(i+1)+' ສຳເລັດ'); })
+        .then(function(){ item.__saved = {result:payload.result, evidence:payload.evidence, checkedBy:payload.checkedBy}; auditSetEdit(i, false); toast('ບັນທຶກລາຍການ '+(i+1)+' ສຳເລັດ'); })
         .catch(function(err){ toast('ບັນທຶກບໍ່ສຳເລັດ', true); });
     });
   }
@@ -3409,35 +3552,90 @@ function updateAuditRow(i, data){
 /* ============================================================
    POLICIES (static reference)
    ============================================================ */
+var POLICY_DEFAULT = [
+  {id:'p71', title:'7.1 ນະໂຍບາຍໄອທີ (IT Policy)', ref:'KGS-IT-MAN-01 §7.1', text:[
+    'ອຸປະກອນ ແລະ ບັນຊີໄອທີເປັນຊັບສິນຂອງບໍລິສັດ — ໃຫ້ນຳໃຊ້ເພື່ອຈຸດປະສົງທຸລະກິດເປັນຫຼັກ',
+    'ຫ້າມຕິດຕັ້ງຊອບແວທີ່ບໍ່ໄດ້ຮັບອະນຸຍາດ ຫຼື ບໍ່ມີ license ຖືກຕ້ອງ',
+    'ນຳໃຊ້ລະຫັດຜ່ານທີ່ປອດໄພ ແລະ MFA ສຳລັບລະບົບສຳຄັນ; ຫ້າມແບ່ງປັນລະຫັດຜ່ານ',
+    'ຫ້າມເປີດເຜີຍຂໍ້ມູນລັບຂອງບໍລິສັດ/ລູກຄ້າຜ່ານຊ່ອງທາງທີ່ບໍ່ປອດໄພ',
+    'ຂໍ້ມູນທຸລະກິດຕ້ອງໄດ້ຮັບການສຳຮອງ (Backup) ຕາມຕາຕະລາງທີ່ກຳນົດ',
+    'ລາຍງານອຸປະກອນສູນຫາຍ/ຖືກລັກ/ຖືກໂຈມຕີທັນທີຕໍ່ຜູ້ຮັບຜິດຊອບໄອທີ',
+    'ປິດບັນຊີ ແລະ ສິດເຂົ້າເຖິງທັນທີເມື່ອພະນັກງານພົ້ນສະພາບ'
+  ].join('\n')},
+  {id:'p72', title:'7.2 ນະໂຍບາຍການນຳໃຊ້ AI (AI Usage Policy)', ref:'KGS-IT-MAN-01 §7.2', text:[
+    '## ອະນຸຍາດໃຫ້ນຳໃຊ້',
+    'ຮ່າງເອກະສານພາຍໃນ, ອີເມວ, ບົດສະຫຼຸບ, ແປພາສາ, ຄົ້ນຄວ້າຂໍ້ມູນທົ່ວໄປ',
+    'ຊ່ວຍວຽກງານດ້ານ IT ພາຍໃຕ້ການທົບທວນຂອງມະນຸດກ່ອນນຳໃຊ້ຈິງ',
+    '## ຫ້າມນຳໃຊ້',
+    'ຫ້າມປ້ອນຂໍ້ມູນລັບຂອງລູກຄ້າ/ພະນັກງານ/ການເງິນ ເຂົ້າສູ່ເຄື່ອງມື AI ສາທາລະນະ',
+    'ຫ້າມນຳຜົນລັບ AI ໄປໃຊ້ຕັດສິນໃຈສຳຄັນໂດຍບໍ່ມີການທົບທວນຈາກມະນຸດ',
+    '## ຂໍ້ກຳນົດການທົບທວນ',
+    'ຜົນລັບ AI ທຸກຄັ້ງທີ່ຈະນຳໄປໃຊ້ຈິງ ຕ້ອງຜ່ານການກວດທານຕາມ Output Review Checklist',
+    'ບັນທຶກທຸກການນຳໃຊ້ AI ໃນວຽກງານທຸລະກິດໄວ້ໃນ AI Usage Log'
+  ].join('\n')}
+];
+var policyEditing = {};
+function policyOverrides(){
+  var o = {};
+  if(state.db){ (state.db.getAll('policyEdits')||[]).forEach(function(r){ o[r.id] = r; }); }
+  return o;
+}
+function policyBodyHtml(text){
+  var html = '', open = false;
+  String(text||'').split(/\r?\n/).forEach(function(ln){
+    ln = ln.replace(/^\s+|\s+$/g, ''); if(!ln) return;
+    if(ln.indexOf('## ')===0){ if(open){ html += '</ul>'; open = false; } html += '<h4>'+esc(ln.slice(3))+'</h4>'; }
+    else { if(!open){ html += '<ul>'; open = true; } html += '<li>'+esc(ln)+'</li>'; }
+  });
+  if(open) html += '</ul>';
+  return html;
+}
+function renderPolicyCards(){
+  var host = $('#policyList'); if(!host) return;
+  var ov = policyOverrides();
+  host.innerHTML = POLICY_DEFAULT.map(function(p){
+    var o = ov[p.id], text = (o && typeof o.text==='string') ? o.text : p.text, ed = !!policyEditing[p.id], tools, body;
+    if(ed){
+      body = '<p class="pc-help">ແຕ່ລະແຖວ = 1 ຂໍ້; ແຖວທີ່ຂຶ້ນຕົ້ນດ້ວຍ ## = ຫົວຂໍ້ຍ່ອຍ</p><textarea class="pc-edit" id="pe_'+p.id+'">'+esc(text)+'</textarea>';
+      tools = '<span class="pc-tools"><button class="btn btn-primary btn-sm" data-pe="save" data-id="'+p.id+'">ບັນທຶກ</button>'+
+        '<button class="btn btn-sm" data-pe="cancel" data-id="'+p.id+'">ຍົກເລີກ</button>'+
+        (o ? '<button class="btn btn-sm btn-danger" data-pe="reset" data-id="'+p.id+'">↺ ຄືນຄ່າເດີມ</button>' : '')+'</span>';
+    } else {
+      body = policyBodyHtml(text);
+      tools = '<span class="pc-tools"><button class="btn btn-sm" data-pe="edit" data-id="'+p.id+'">✎ ແກ້ໄຂ</button></span>';
+    }
+    var mod = o ? '<div class="pc-mod">✎ ແກ້ໄຂໃນແອັບເມື່ອ '+esc(fmtFull(o.updatedAt))+' — ບໍ່ແມ່ນສະບັບອະນຸມັດຢ່າງເປັນທາງການ; ກວດທຽບກັບ KGS-IT-MAN-01 ກ່ອນນຳໃຊ້</div>' : '';
+    return '<div class="policy-card'+(ed?' editing':'')+'" data-id="'+p.id+'"><div class="pc-head"><div><h2>'+esc(p.title)+'</h2><div class="ref">'+esc(p.ref)+'</div></div>'+tools+'</div>'+mod+body+'</div>';
+  }).join('');
+}
 function renderPolicies(){
+  policyEditing = {};
   var c = $('#content');
   c.innerHTML =
     '<div class="page-head"><div><div class="page-eyebrow">Phase 1 — Policy & Setup</div>'+
     '<h1>ນະໂຍບາຍ IT & AI Usage</h1><div class="page-sub">ສະບັບອ້າງອີງຫຍໍ້ — ສະບັບເຕັມທີ່ອະນຸມັດຢ່າງເປັນທາງການຢູ່ໃນເອກະສານ Word “KGS-IT-MAN-01”</div></div></div>'+
-    '<div class="policy-card">'+
-      '<h2>7.1 ນະໂຍບາຍໄອທີ (IT Policy)</h2><div class="ref">KGS-IT-MAN-01 §7.1</div>'+
-      '<ul>'+
-        '<li>ອຸປະກອນ ແລະ ບັນຊີໄອທີເປັນຊັບສິນຂອງບໍລິສັດ — ໃຫ້ນຳໃຊ້ເພື່ອຈຸດປະສົງທຸລະກິດເປັນຫຼັກ</li>'+
-        '<li>ຫ້າມຕິດຕັ້ງຊອບແວທີ່ບໍ່ໄດ້ຮັບອະນຸຍາດ ຫຼື ບໍ່ມີ license ຖືກຕ້ອງ</li>'+
-        '<li>ນຳໃຊ້ລະຫັດຜ່ານທີ່ປອດໄພ ແລະ MFA ສຳລັບລະບົບສຳຄັນ; ຫ້າມແບ່ງປັນລະຫັດຜ່ານ</li>'+
-        '<li>ຫ້າມເປີດເຜີຍຂໍ້ມູນລັບຂອງບໍລິສັດ/ລູກຄ້າຜ່ານຊ່ອງທາງທີ່ບໍ່ປອດໄພ</li>'+
-        '<li>ຂໍ້ມູນທຸລະກິດຕ້ອງໄດ້ຮັບການສຳຮອງ (Backup) ຕາມຕາຕະລາງທີ່ກຳນົດ</li>'+
-        '<li>ລາຍງານອຸປະກອນສູນຫາຍ/ຖືກລັກ/ຖືກໂຈມຕີທັນທີຕໍ່ຜູ້ຮັບຜິດຊອບໄອທີ</li>'+
-        '<li>ປິດບັນຊີ ແລະ ສິດເຂົ້າເຖິງທັນທີເມື່ອພະນັກງານພົ້ນສະພາບ</li>'+
-      '</ul>'+
-    '</div>'+
-    '<div class="policy-card">'+
-      '<h2>7.2 ນະໂຍບາຍການນຳໃຊ້ AI (AI Usage Policy)</h2><div class="ref">KGS-IT-MAN-01 §7.2</div>'+
-      '<h4>ອະນຸຍາດໃຫ້ນຳໃຊ້</h4>'+
-      '<ul><li>ຮ່າງເອກະສານພາຍໃນ, ອີເມວ, ບົດສະຫຼຸບ, ແປພາສາ, ຄົ້ນຄວ້າຂໍ້ມູນທົ່ວໄປ</li>'+
-      '<li>ຊ່ວຍວຽກງານດ້ານ IT ພາຍໃຕ້ການທົບທວນຂອງມະນຸດກ່ອນນຳໃຊ້ຈິງ</li></ul>'+
-      '<h4>ຫ້າມນຳໃຊ້</h4>'+
-      '<ul><li>ຫ້າມປ້ອນຂໍ້ມູນລັບຂອງລູກຄ້າ/ພະນັກງານ/ການເງິນ ເຂົ້າສູ່ເຄື່ອງມື AI ສາທາລະນະ</li>'+
-      '<li>ຫ້າມນຳຜົນລັບ AI ໄປໃຊ້ຕັດສິນໃຈສຳຄັນໂດຍບໍ່ມີການທົບທວນຈາກມະນຸດ</li></ul>'+
-      '<h4>ຂໍ້ກຳນົດການທົບທວນ</h4>'+
-      '<ul><li>ຜົນລັບ AI ທຸກຄັ້ງທີ່ຈະນຳໄປໃຊ້ຈິງ ຕ້ອງຜ່ານການກວດທານຕາມ Output Review Checklist</li>'+
-      '<li>ບັນທຶກທຸກການນຳໃຊ້ AI ໃນວຽກງານທຸລະກິດໄວ້ໃນ AI Usage Log</li></ul>'+
-    '</div>';
+    '<div class="lock-hint">🔒 <span>ປ້ອງກັນການແກ້ໄຂໂດຍບໍ່ຕັ້ງໃຈ: ກົດ</span> <b>✎ ແກ້ໄຂ</b> <span>ທີ່ກ່ອງນັ້ນກ່ອນ ຈຶ່ງຈະປ່ຽນເນື້ອຫາໄດ້</span></div>'+
+    '<div id="policyList"></div>';
+  renderPolicyCards();
+  $('#policyList').addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('[data-pe]') : null; if(!b) return;
+    var act = b.getAttribute('data-pe'), id = b.getAttribute('data-id');
+    if(act==='edit'){ policyEditing[id] = true; renderPolicyCards(); var t = $('#pe_'+id); if(t) t.focus(); }
+    else if(act==='cancel'){ delete policyEditing[id]; renderPolicyCards(); }
+    else if(act==='save'){
+      var txt = ($('#pe_'+id)||{}).value || '';
+      if(!txt.replace(/\s+/g,'')){ toast('ເນື້ອຫາວ່າງ — ບໍ່ສາມາດບັນທຶກໄດ້', true); return; }
+      if(!state.db){ toast('ບັນທຶກບໍ່ສຳເລັດ', true); return; }
+      var def = POLICY_DEFAULT.filter(function(p){ return p.id===id; })[0];
+      var same = def && txt.replace(/\r/g,'').trim()===def.text.trim();
+      var pr = same ? state.db.doc('policyEdits/'+id).delete() : state.db.doc('policyEdits/'+id).set({text:txt, updatedAt:new Date().toISOString()});
+      pr.then(function(){ delete policyEditing[id]; renderPolicyCards(); toast('ບັນທຶກແລ້ວ'); });
+    }
+    else if(act==='reset'){
+      if(!window.confirm('ຄືນຄ່າເດີມຂອງເນື້ອຫານີ້ບໍ?')) return;
+      state.db.doc('policyEdits/'+id).delete().then(function(){ delete policyEditing[id]; renderPolicyCards(); toast('ກັບຄືນຄ່າເດີມແລ້ວ'); });
+    }
+  });
 }
 
 /* ============================================================
@@ -3487,7 +3685,7 @@ var SS_TXT = {
     kNew:'ສະເໜີລາຄາ', kAsset:'ຊັບສິນ', inReg:'ມີໃນ IT Asset Register',
     emptyList:'ຍັງບໍ່ມີເຄື່ອງ — ກົດປຸ່ມເພີ່ມດ້ານເທິງ, ຫຼື ໂຫຼດ IT-H021 + MacBook M1 ຄືນ',
     catScores:'ຄະແນນແຕ່ລະດ້ານ · ນ້ຳໜັກ', cat:'ດ້ານ',
-    tagline:'ລະບົບໃຫ້ຄະແນນ ແລະ ທຽບສະເປັກຄອມພິວເຕີ · ໃຊ້ທັງຈັດຊື້ໃໝ່ ແລະ ປະເມີນຊັບສິນ IT', kbdHint:'ປຸ່ມລັດ: ↑ ↓ ເລືອກເຄື່ອງ · F ເຕັມຈໍ · Esc ອອກ', fsOn:'ເຕັມຈໍ', fsOff:'ອອກຈາກເຕັມຈໍ'
+    tagline:'ລະບົບໃຫ້ຄະແນນ ແລະ ທຽບສະເປັກຄອມພິວເຕີ · ໃຊ້ທັງຈັດຊື້ໃໝ່ ແລະ ປະເມີນຊັບສິນ IT', kbdHint:'ປຸ່ມລັດ: ↑ ↓ ເລືອກເຄື່ອງ · F ເຕັມຈໍ · Esc ອອກ', fsOn:'ເຕັມຈໍ', fsOff:'ອອກຈາກເຕັມຈໍ', editBtn:'✎ ແກ້ໄຂ', doneBtn:'✓ ແກ້ໄຂແລ້ວ (ລ໋ອກ)', lockHint:'🔒 ອ່ານຢ່າງດຽວ — ກົດ "✎ ແກ້ໄຂ" ຈຶ່ງຈະປ່ຽນສະເປັກ / ສຳເນົາ / ລຶບໄດ້', editHint:'✎ ກຳລັງແກ້ໄຂ — ການປ່ຽນຖືກບັນທຶກອັດຕະໂນມັດ; ກົດ "ແກ້ໄຂແລ້ວ" ເພື່ອລ໋ອກຄືນ'
   },
   en:{
     eyebrow:'Phase 2 — Assets & Access', title:'PC Spec Score — Computer Spec Comparison',
@@ -3524,7 +3722,7 @@ var SS_TXT = {
     kNew:'Quote', kAsset:'Asset', inReg:'Found in IT Asset Register',
     emptyList:'No machines yet. Use the add buttons above, or reload IT-H021 + MacBook M1.',
     catScores:'Category scores · weight', cat:'Category',
-    tagline:'Computer spec scoring and comparison · for new purchases and IT asset reviews', kbdHint:'Shortcuts: ↑ ↓ switch machine · F full screen · Esc exit', fsOn:'Full screen', fsOff:'Exit full screen'
+    tagline:'Computer spec scoring and comparison · for new purchases and IT asset reviews', kbdHint:'Shortcuts: ↑ ↓ switch machine · F full screen · Esc exit', fsOn:'Full screen', fsOff:'Exit full screen', editBtn:'✎ Edit', doneBtn:'✓ Done (lock)', lockHint:'🔒 Read-only. Press "✎ Edit" to change specs, duplicate or delete', editHint:'✎ Editing. Changes save automatically; press "Done" to lock again'
   }
 };
 function ssT(k, v){
@@ -3753,6 +3951,7 @@ function ssRing(v, start){
     '<text id="ssRingNum" x="75" y="83" text-anchor="middle" font-family="Orbitron, sans-serif" font-size="30" font-weight="800">'+cur+'</text>'+
     '<text x="75" y="102" text-anchor="middle" font-family="Share Tech Mono, monospace" font-size="10" style="fill:#7D8DB5;letter-spacing:2px">/100 PTS</text>';
 }
+var ssEdit = false;
 var ssRM = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches), ssLastAnim = null;
 function ssAnimateRing(v){
   var c=2*Math.PI*60, t0=performance.now(), D=900, arc=$('#ssArc'), num=$('#ssRingNum'), tks=[].slice.call(document.querySelectorAll('#ssRing .tk'));
@@ -3874,11 +4073,21 @@ function ssFormHtml(m){
   });
   return h;
 }
+function ssApplyEdit(){
+  var m = ssFind(ssSel), form = $('#ssSpec'); if(!form) return;
+  var eb = $('#ssEditBtn'); if(eb){ eb.textContent = ssEdit ? ssT('doneBtn') : ssT('editBtn'); eb.classList.toggle('primary', !!ssEdit); eb.style.display = m ? '' : 'none'; }
+  var dp = $('#ssDupBtn'), dl = $('#ssDelBtn'); if(dp) dp.style.display = ssEdit ? '' : 'none'; if(dl) dl.style.display = ssEdit ? '' : 'none';
+  var h = $('#ssLockHint'); if(h){ h.style.display = m ? '' : 'none'; h.textContent = ssEdit ? ssT('editHint') : ssT('lockHint'); }
+  form.classList.toggle('locked', !ssEdit);
+  var els = form.querySelectorAll('input,select,textarea'); for(var i=0;i<els.length;i++) els[i].disabled = !ssEdit;
+  if(!ssEdit){ var dc = $('#ssDelConfirm'); if(dc) dc.style.display = 'none'; }
+}
 function ssRenderForm(){
   var m = ssFind(ssSel), form = $('#ssSpec'); if(!form) return;
   var focusId = document.activeElement && document.activeElement.id;
   form.innerHTML = m ? ssFormHtml(m) : '';
-  if(focusId && $('#'+focusId)){ var e = $('#'+focusId); e.focus(); if(e.setSelectionRange && e.type==='text'){ var l = e.value.length; e.setSelectionRange(l,l); } }
+  ssApplyEdit();
+  if(focusId && $('#'+focusId)){ var e = $('#'+focusId); if(!e.disabled){ e.focus(); if(e.setSelectionRange && e.type==='text'){ var l = e.value.length; e.setSelectionRange(l,l); } } }
 }
 
 function ssRenderMatrix(rows){
@@ -3943,7 +4152,7 @@ function ssKeys(e){
   else if((e.key==='ArrowDown'||e.key==='ArrowUp'||e.key==='ArrowRight'||e.key==='ArrowLeft') && ssLastRows.length){
     e.preventDefault();
     var i = ssLastRows.indexOf(ssSel), dd = (e.key==='ArrowDown'||e.key==='ArrowRight') ? 1 : -1;
-    ssSel = ssLastRows[(i+dd+ssLastRows.length)%ssLastRows.length]; ssRenderAll(); ssRenderForm();
+    ssSel = ssLastRows[(i+dd+ssLastRows.length)%ssLastRows.length]; ssEdit = false; ssRenderAll(); ssRenderForm();
   }
 }
 function ssParticles(){
@@ -3977,7 +4186,7 @@ function ssParticles(){
 
 /* ---------- page ---------- */
 function renderSpecScore(){
-  ssLoad();
+  ssLoad(); ssEdit = false;
   var c = $('#content');
   var lg = state.lang==='en' ? 'en' : 'lo';
   c.innerHTML =
@@ -4001,15 +4210,16 @@ function renderSpecScore(){
         '<p class="ss-hint">'+esc(ssT('sampleNote'))+'</p><p class="ss-hint">'+esc(ssT('kbdHint'))+'</p>'+
         '<div class="ss-tools"><button type="button" class="ss-btn" data-ss="loadEx">'+esc(ssT('loadEx'))+'</button><button type="button" class="ss-btn" data-ss="clearEx">'+esc(ssT('clearEx'))+'</button></div></section>'+
       '<section class="ss-panel" id="ssDetail"><div class="ss-panel-head"><h2 class="ss-h2" id="ssDh"></h2><div class="ss-tools">'+
+        '<button type="button" class="ss-btn" data-ss="edit" id="ssEditBtn"></button>'+
         '<button type="button" class="ss-btn fs" data-ss="fs"><span id="ssFsLabel">'+esc(ssT('fsOn'))+'</span><span class="ss-kbd">F</span></button>'+
-        '<button type="button" class="ss-btn" data-ss="dup">'+esc(ssT('duplicate'))+'</button>'+
-        '<button type="button" class="ss-btn danger" data-ss="del">'+esc(ssT('del'))+'</button></div></div>'+
+        '<button type="button" class="ss-btn" data-ss="dup" id="ssDupBtn" style="display:none">'+esc(ssT('duplicate'))+'</button>'+
+        '<button type="button" class="ss-btn danger" data-ss="del" id="ssDelBtn" style="display:none">'+esc(ssT('del'))+'</button></div></div>'+
         '<div id="ssDelConfirm" class="ss-confirm" style="display:none"><span>'+esc(ssT('confirmDel'))+'</span>'+
           '<button type="button" class="ss-btn danger" data-ss="delYes">'+esc(ssT('yesDelete'))+'</button><button type="button" class="ss-btn" data-ss="delNo">'+esc(ssT('cancel'))+'</button></div>'+
         '<div class="ss-sheet"><svg class="ss-ring" viewBox="0 0 150 150" id="ssRing" role="img"></svg><div class="ss-verdict" id="ssVerdict"></div>'+
           '<div class="ss-radar-box"><svg id="ssRadar" viewBox="-40 -20 380 340" role="img"></svg><div class="ss-legend" id="ssLegend"></div></div></div>'+
         '<div class="ss-bk" id="ssBreak"></div>'+
-        '<form class="ss-spec" id="ssSpec" autocomplete="off"></form></section>'+
+        '<p class="ss-hint ss-lock" id="ssLockHint"></p><form class="ss-spec locked" id="ssSpec" autocomplete="off"></form></section>'+
       '<section class="ss-panel"><h2 class="ss-h2">'+esc(ssT('matrix'))+'</h2><div class="ss-matrix"><table id="ssMatrix"></table></div></section>'+
       '<section class="ss-panel ss-io"><h2 class="ss-h2">'+esc(ssT('dataTitle'))+'</h2><p class="ss-hint">'+esc(ssT('dataHint'))+'</p>'+
         '<div class="ss-tools"><button type="button" class="ss-btn" data-ss="csv">'+esc(ssT('csv'))+'</button>'+
@@ -4026,7 +4236,7 @@ function renderSpecScore(){
   function addMachine(kind){
     var m = Object.assign({}, SS_DEF, {id:ssUid(), name:ssT('newMachine')+' '+(ssList.length+1), kind:kind});
     if(kind==='asset'){ m.year = SS_CY-3; m.cpuYear = SS_CY-4; }
-    ssList.push(m); ssSel = m.id; ssFilter = 'all'; ssSaveMachine(m);
+    ssList.push(m); ssSel = m.id; ssFilter = 'all'; ssEdit = true; ssSaveMachine(m);
     ssRenderProfiles(); ssRenderAll(); ssRenderForm();
     var f = $('#ssf-name'); if(f){ f.focus(); f.select(); }
   }
@@ -4034,20 +4244,22 @@ function renderSpecScore(){
     var b = e.target.closest ? e.target.closest('[data-ss]') : null; if(!b) return;
     var act = b.getAttribute('data-ss'), m;
     if(act==='profile'){ ssProfile = b.getAttribute('data-p'); ssWeights = Object.assign({}, SS_PROFILES[ssProfile].w); ssCustom = false; ssSaveCfg(); ssRenderProfiles(); ssRenderAll(); }
-    else if(act==='filter'){ ssFilter = b.getAttribute('data-f'); ssRenderProfiles(); ssRenderAll(); ssRenderForm(); }
-    else if(act==='select'){ ssSel = b.getAttribute('data-id'); $('#ssDelConfirm').style.display = 'none'; ssRenderAll(); ssRenderForm(); }
+    else if(act==='filter'){ ssFilter = b.getAttribute('data-f'); ssEdit = false; ssRenderProfiles(); ssRenderAll(); ssRenderForm(); }
+    else if(act==='select'){ ssSel = b.getAttribute('data-id'); ssEdit = false; $('#ssDelConfirm').style.display = 'none'; ssRenderAll(); ssRenderForm(); }
+    else if(act==='edit'){ if(!ssFind(ssSel)) return; ssEdit = !ssEdit; ssRenderForm(); }
     else if(act==='lang') setLang(b.getAttribute('data-l'));
     else if(act==='fs') ssSetFs(!$('#ssDetail').classList.contains('focus'));
     else if(act==='addNew') addMachine('new');
     else if(act==='addAsset') addMachine('asset');
-    else if(act==='dup'){ m = ssFind(ssSel); if(!m) return; var cp = Object.assign({}, m, {id:ssUid(), name:m.name+' (2)'}); ssList.push(cp); ssSel = cp.id; ssSaveMachine(cp); ssRenderAll(); ssRenderForm(); }
-    else if(act==='del') $('#ssDelConfirm').style.display = '';
+    else if(act==='dup'){ if(!ssEdit) return; m = ssFind(ssSel); if(!m) return; var cp = Object.assign({}, m, {id:ssUid(), name:m.name+' (2)'}); ssList.push(cp); ssSel = cp.id; ssEdit = true; ssSaveMachine(cp); ssRenderAll(); ssRenderForm(); }
+    else if(act==='del'){ if(ssEdit) $('#ssDelConfirm').style.display = ''; }
     else if(act==='delNo') $('#ssDelConfirm').style.display = 'none';
     else if(act==='delYes'){
+      if(!ssEdit) return;
       var idx = -1, i; for(i=0;i<ssList.length;i++) if(ssList[i].id===ssSel) idx = i; if(idx<0) return;
       ssTrash = {m:ssList[idx], i:idx}; ssList.splice(idx,1); clearTimeout(ssSaveTimers[ssTrash.m.id]);
       if(state.db) state.db.doc('specScores/'+ssTrash.m.id).delete();
-      ssSel = null; $('#ssDelConfirm').style.display = 'none';
+      ssSel = null; ssEdit = false; $('#ssDelConfirm').style.display = 'none';
       $('#ssUndoText').textContent = ssT('deletedX',{x:ssTrash.m.name}); $('#ssUndo').style.display = '';
       ssRenderAll(); ssRenderForm();
     }
@@ -4070,7 +4282,7 @@ function renderSpecScore(){
   root.addEventListener('click', onAction);
 
   $('#ssSpec').addEventListener('input', function(e){
-    var el2 = e.target, k = el2.getAttribute('data-k'); if(!k) return;
+    var el2 = e.target, k = el2.getAttribute('data-k'); if(!k || !ssEdit) return;
     var m = ssFind(ssSel); if(!m) return;
     m[k] = el2.type==='checkbox' ? el2.checked : el2.value;
     ssSaveMachine(m);
